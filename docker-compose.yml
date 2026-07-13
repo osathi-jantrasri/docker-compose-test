@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16
+    container_name: pg-db
+    environment:
+      POSTGRES_USER: postgres # กำหนด user ของ postgres
+      POSTGRES_PASSWORD: postgres # กำหนด password ของ postgres
+      POSTGRES_DB: tutorial # กำหนด database เริ่มต้น
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    container_name: backend
+    build: ./backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy # รอจน postgres พร้อมรับ connection จริง ๆ ก่อน
+
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    ports:
+      - "5173:80" # nginx serve บน port 80 ใน container, map ออกมาเป็น 5173
+    depends_on:
+      - backend
+
+volumes:
+  pg-data:
