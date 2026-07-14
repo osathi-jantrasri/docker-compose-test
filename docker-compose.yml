@@ -11,6 +11,9 @@ services:
     volumes:
       - pg-data:/var/lib/postgresql/data
       - ./docker-compose-test/test-mount/:/var/lib/postgresql/data/test-mount
+      - ./entrypoint-pgdb.sh:/usr/local/bin/entrypoint-pgdb.sh
+    entrypoint: ["/bin/sh", "/usr/local/bin/entrypoint-pgdb.sh"]
+    command: ["docker-entrypoint.sh", "postgres"]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -18,8 +21,8 @@ services:
       retries: 10
 
   backend:
+    image: osathijbem/java-server-test
     container_name: backend
-    build: ./backend
     ports:
       - "8080:8080"
     depends_on:
@@ -27,8 +30,8 @@ services:
         condition: service_healthy # รอจน postgres พร้อมรับ connection จริง ๆ ก่อน
 
   frontend:
+    image: osathijbem/vue-test
     container_name: frontend
-    build: ./frontend/vue-demo
     ports:
       - "5173:80" # nginx serve บน port 80 ใน container, map ออกมาเป็น 5173
     depends_on:
