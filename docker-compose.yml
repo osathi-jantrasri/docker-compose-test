@@ -10,6 +10,7 @@ services:
       - "5432:5432"
     volumes:
       - pg-data:/var/lib/postgresql/data
+      - ./docker-compose-test/test-mount/:/var/lib/postgresql/data/test-mount
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -27,7 +28,7 @@ services:
 
   frontend:
     container_name: frontend
-    build: ./frontend
+    build: ./frontend/vue-demo
     ports:
       - "5173:80" # nginx serve บน port 80 ใน container, map ออกมาเป็น 5173
     depends_on:

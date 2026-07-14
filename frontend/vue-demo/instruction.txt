@@ -1,0 +1,8 @@
+npm install
+npm run dev
+
+Installed vue-router@4.
+npm install vue-router@4 --silent 2>&1 | tail -20
+mkdir -p frontend/vue-demo/src/views frontend/vue-demo/src/router
+
+npx vue-tsc --build 2>&1 | tail -40
