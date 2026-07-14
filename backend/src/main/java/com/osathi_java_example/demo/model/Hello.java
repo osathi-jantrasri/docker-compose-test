@@ -19,14 +19,14 @@ public class Hello {
     
     @Id
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "hello_id")
-    private Long helloId; 
+    @Column(name = "\"helloId\"")
+    private Integer helloId; 
 
-    @Column(name = "hello_message")
+    @Column(name = "\"helloMessage\"")
     private String helloMessage; 
 
     // Add constructor to handle deserialization from number value
-    public Hello(Long id) {
+    public Hello(Integer id) {
         this.helloId = id;
     }
 
